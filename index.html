@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bibliotheca | Backoffice</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <aside class="sidebar">
+        <h2 class="logo">Bibliotheca</h2>
+        <ul class="menu">
+            <li onclick="showSection('dashboard')">
+                 <i class="fa-solid fa-chart-line"></i> Dashboard
+            </li>
+            <li onclick="showSection('livres')">
+                 <i class="fa-solid fa-book"></i> Livres
+            </li>
+            <li onclick="showSection('auteurs')">
+                 <i class="fa-solid fa-user"></i> Auteurs
+            </li>
+            <li onclick="showSection('api')">
+                 <i class="fa-solid fa-globe"></i> API
+            </li>
+        </ul>
+    </aside>
+    <main class="main-content">
+         <nav class="navbar">
+      <span>Dashboard Bibliotheca</span>
+
+    </nav>
+
+<section id="dashboard" class="section active">
+      <h1>Dashboard</h1>
+
+  <div class="kpi-container">
+        <div class="kpi-card">
+          <h3>Total Livres</h3>
+          <p id="kpiLivres">0</p>
+        </div>
+
+        <div class="kpi-card">
+          <h3>Total Auteurs</h3>
+          <p id="kpiAuteurs">0</p>
+        </div>
+  </div>
+      <canvas id="livresChart"></canvas>
+</section>
+
+<section id="livres" class="section">
+      <h1>Gestion des Livres</h1>
+
+   <form id="livreForm">
+        <input type="text" id="titre" placeholder="Titre du livre">
+        <input type="text" id="auteur" placeholder="Auteur">
+        <input type="number" id="annee" placeholder="Année">
+        <input type="text" id="genre" placeholder="Genre">
+        <button type="submit">Ajouter Livre</button>
+    </form>
+<div class="table-controls">
+    <input type="text" id="searchLivre" placeholder="Rechercher un livre...">
+
+      <select id="sortLivre">
+        <option value="">Trier par</option>
+        <option value="titre">Titre</option>
+        <option value="annee">Année</option>
+      </select>
+</div>
+</section>
+
+<section id="auteurs" class="section">
+      <h1>Gestion des Auteurs</h1>
+
+      <form id="auteurForm">
+        <input type="text" id="nomAuteur" placeholder="Nom de l'auteur">
+        <input type="text" id="nationalite" placeholder="Nationalité">
+        <button type="submit">Ajouter Auteur</button>
+      </form>
+
+      <ul id="auteursList"></ul>
+</section>
+
+<section id="api" class="section">
+      <h1>Recherche via OpenLibrary</h1>
+
+      <input type="text" id="apiSearch" placeholder="Rechercher un livre...">
+      <button onclick="searchAPI()">Rechercher</button>
+
+      <div id="apiResults"></div>
+</section>
+</main>
+
+<script src="main.js"></script>
+<script src="livres.js"></script>
+<script src="auteurs.js"></script>
+<script src="dashboard.js"></script>
+<script src="api.js"></script>
+
+</body>
+</html>
