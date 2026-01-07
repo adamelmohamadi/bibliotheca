@@ -11,31 +11,41 @@ function showSection(sectionId) {
     activeSection.classList.add('active');
 }
 
-// Exemple de données pour les KPIs
-let totalLivres = 1200;
-let totalAuteurs = 300;
+// KPI et graphique dynamiques basés sur les données globales `livres` et `auteurs`
+let livresChart = null;
 
-// Fonction pour mettre à jour les KPIs
+// Fonction pour mettre à jour les KPIs en lisant les tableaux globaux
 function updateKPIs() {
-    document.getElementById('kpiLivres').textContent = totalLivres;
-    document.getElementById('kpiAuteurs').textContent = totalAuteurs;
+    const kpiLivresEl = document.getElementById('kpiLivres');
+    const kpiAuteursEl = document.getElementById('kpiAuteurs');
+    const totalLivres = (typeof livres !== 'undefined') ? livres.length : 0;
+    const totalAuteurs = (typeof auteurs !== 'undefined') ? auteurs.length : 0;
+
+    if (kpiLivresEl) kpiLivresEl.textContent = totalLivres;
+    if (kpiAuteursEl) kpiAuteursEl.textContent = totalAuteurs;
 }
 
 // Initialiser le graphique avec Chart.js
 function initLivresChart() {
     const ctx = document.getElementById('livresChart').getContext('2d');
 
-    // Exemple de données pour le graphique
-const data = {
-    labels: ['Fiction', 'Science', 'Histoire', 'Biographie'],
-    datasets: [{
-        label: 'Livres par Genre',
-        data: [500, 200, 300, 200],
-        backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FFC300'],
-        borderColor: '#000',
-        borderWidth: 1
-    }]
-};
+    const labels = ['Fiction', 'Science', 'Histoire', 'Biographie'];
+    // Calculer les données initiales depuis `livres` si disponible
+    const initialCounts = labels.map(label => {
+        if (typeof livres === 'undefined') return 0;
+        return livres.filter(l => l.genre === label).length;
+    });
+
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Livres par Genre',
+            data: initialCounts,
+            backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FFC300'],
+            borderColor: '#000',
+            borderWidth: 1
+        }]
+    };
 
     const config = {
         type: 'bar',
@@ -50,8 +60,24 @@ const data = {
         }
     };
 
-    // Créer le graphique
-    const livresChart = new Chart(ctx, config);
+    // Créer le graphique et le conserver globalement
+    livresChart = new Chart(ctx, config);
+}
+
+// Fonction publique pour rafraîchir KPIs + graphique depuis d'autres fichiers
+function refreshDashboard() {
+    updateKPIs();
+
+    if (!livresChart) return;
+
+    const labels = livresChart.data.labels;
+    const counts = labels.map(label => {
+        if (typeof livres === 'undefined') return 0;
+        return livres.filter(l => l.genre === label).length;
+    });
+
+    livresChart.data.datasets[0].data = counts;
+    livresChart.update();
 }
 
 // Appel initial des fonctions
@@ -64,4 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialiser le graphique
     initLivresChart();
+    // Rafraîchir avec les données actuelles
+    refreshDashboard();
 });

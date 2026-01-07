@@ -1,4 +1,8 @@
+/* ====================================
+   BIBLIOTHECA - CSS UNIQUE & MODERNE
+   ==================================== */
 
+/* Variables & Reset */
 :root {
   --primary: #2d4a7c;
   --secondary: #5b8fb9;
@@ -25,7 +29,9 @@ body {
   overflow-x: hidden;
 }
 
-
+/* ====================================
+   SIDEBAR - Design Élégant
+   ==================================== */
 .sidebar {
   width: 280px;
   background: var(--gradient);
@@ -120,7 +126,9 @@ body {
   text-align: center;
 }
 
-
+/* ====================================
+   MAIN CONTENT
+   ==================================== */
 .main-content {
   flex: 1;
   margin-left: 280px;
@@ -139,7 +147,9 @@ body {
   }
 }
 
-
+/* ====================================
+   NAVBAR
+   ==================================== */
 .navbar {
   background: white;
   padding: 1.5rem 2rem;
@@ -161,7 +171,9 @@ body {
   background-clip: text;
 }
 
-
+/* ====================================
+   SECTIONS
+   ==================================== */
 .section {
   display: none;
   animation: slideIn 0.4s ease;
@@ -201,7 +213,9 @@ body {
   border-radius: 2px;
 }
 
-
+/* ====================================
+   KPI CARDS - Design Moderne
+   ==================================== */
 .kpi-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -270,7 +284,9 @@ body {
   margin: 0;
 }
 
-
+/* ====================================
+   CANVAS CHART
+   ==================================== */
 canvas {
   background: white;
   padding: 2rem;
@@ -279,7 +295,9 @@ canvas {
   max-width: 100%;
 }
 
-
+/* ====================================
+   FORMS - Design Élégant
+   ==================================== */
 form {
   background: white;
   padding: 2.5rem;
@@ -356,7 +374,9 @@ button:active {
   transform: translateY(0);
 }
 
-
+/* ====================================
+   TABLE CONTROLS
+   ==================================== */
 .table-controls {
   background: white;
   padding: 1.5rem;
@@ -374,7 +394,9 @@ button:active {
   min-width: 200px;
 }
 
-
+/* ====================================
+   LISTS - Style Unique
+   ==================================== */
 #auteursList {
   list-style: none;
   display: grid;
@@ -397,7 +419,9 @@ button:active {
   box-shadow: 0 8px 25px var(--shadow);
 }
 
-
+/* ====================================
+   API RESULTS
+   ==================================== */
 #apiResults {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -430,7 +454,9 @@ button:active {
   box-shadow: 0 12px 35px var(--shadow);
 }
 
-
+/* ====================================
+   RESPONSIVE
+   ==================================== */
 @media (max-width: 1024px) {
   .sidebar {
     width: 240px;
@@ -504,7 +530,9 @@ button:active {
   }
 }
 
-
+/* ====================================
+   ANIMATIONS SUPPLÉMENTAIRES
+   ==================================== */
 @keyframes pulse {
   0%, 100% {
     transform: scale(1);
@@ -518,7 +546,9 @@ button:active {
   animation: pulse 2s infinite;
 }
 
-
+/* ====================================
+   SCROLLBAR PERSONNALISÉE
+   ==================================== */
 ::-webkit-scrollbar {
   width: 10px;
 }

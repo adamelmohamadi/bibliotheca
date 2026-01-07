@@ -58,6 +58,10 @@ function updateKPIsLivres() {
     if (kpiLivres) {
         kpiLivres.textContent = livres.length;
     }
+    // Si le dashboard expose refreshDashboard, l'appeler pour mettre à jour le graphique
+    if (typeof refreshDashboard === 'function') {
+        refreshDashboard();
+    }
 }
 
 // --- Recherche des livres ---
