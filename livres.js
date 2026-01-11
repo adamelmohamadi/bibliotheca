@@ -1,28 +1,56 @@
-// --- Déclaration des variables ---
-let livres = []; // Tableau pour stocker les livres
+let livres = []; 
 
-// --- Sélection des éléments du DOM ---
+
 const livreForm = document.getElementById('livreForm');
 const searchInput = document.getElementById('searchLivre');
 const sortSelect = document.getElementById('sortLivre');
 
-// Création d'un conteneur pour afficher les livres
+
 let livresContainer = document.createElement('ul');
 livresContainer.id = "livresList";
 document.getElementById('livres').appendChild(livresContainer);
 
-// --- Fonction pour afficher les livres ---
+
 function displayLivres(filteredLivres = livres) {
-    livresContainer.innerHTML = ''; // vider la liste
+    console.log('Affichage des livres:', filteredLivres);
+    livresContainer.innerHTML = ''; 
 
     filteredLivres.forEach((livre, index) => {
         const li = document.createElement('li');
-        li.textContent = `${livre.titre} - ${livre.auteur} (${livre.annee}) [${livre.genre}] `;
+        li.classList.add('livre-item');
+        
+        
+        if (livre.coverUrl) {
+            console.log('Image trouvée pour:', livre.titre, livre.coverUrl);
+            const img = document.createElement('img');
+            img.src = livre.coverUrl;
+            img.alt = `Couverture de ${livre.titre}`;
+            img.classList.add('livre-cover-thumbnail');
+            li.appendChild(img);
+        } else {
+            console.log('Pas d\'image pour:', livre.titre);
+            
+            const placeholder = document.createElement('div');
+            placeholder.classList.add('livre-no-cover');
+            placeholder.innerHTML = '<i class="fa-solid fa-book"></i>';
+            li.appendChild(placeholder);
+        }
+        
+        
+        const infoDiv = document.createElement('div');
+        infoDiv.classList.add('livre-info');
+        infoDiv.innerHTML = `
+            <strong>${livre.titre}</strong>
+            <span>👤 ${livre.auteur}</span>
+            <span>📅 ${livre.annee}</span>
+            <span>📚 ${livre.genre}</span>
+        `;
+        li.appendChild(infoDiv);
 
-        // Bouton supprimer
+    
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = 'Supprimer';
-        deleteBtn.style.marginLeft = '10px';
+        deleteBtn.classList.add('delete-btn');
         deleteBtn.onclick = () => {
             removeLivre(index);
         };
@@ -31,40 +59,50 @@ function displayLivres(filteredLivres = livres) {
         livresContainer.appendChild(li);
     });
 
-    // Mettre à jour le KPI
     updateKPIsLivres();
 }
 
-// --- Fonction pour ajouter un livre ---
-function addLivre(titre, auteur, annee, genre) {
+
+function addLivre(titre, auteur, annee, genre, coverUrl = null) {
+    console.log('addLivre appelée avec:', {titre, auteur, annee, genre, coverUrl});
+    
     if (titre.trim() === '' || auteur.trim() === '' || !annee || genre.trim() === '') {
         alert('Veuillez remplir tous les champs.');
         return;
     }
 
-    livres.push({ titre, auteur, annee: Number(annee), genre });
+    
+    const nouveauLivre = { 
+        titre, 
+        auteur, 
+        annee: Number(annee), 
+        genre,
+        coverUrl: coverUrl || null 
+    };
+    
+    console.log('Livre ajouté:', nouveauLivre);
+    livres.push(nouveauLivre);
     displayLivres();
 }
 
-// --- Fonction pour supprimer un livre ---
 function removeLivre(index) {
-    livres.splice(index, 1); // supprimer le livre
+    livres.splice(index, 1);
     displayLivres();
 }
 
-// --- Fonction pour mettre à jour le KPI ---
+
 function updateKPIsLivres() {
     const kpiLivres = document.getElementById('kpiLivres');
     if (kpiLivres) {
         kpiLivres.textContent = livres.length;
     }
-    // Si le dashboard expose refreshDashboard, l'appeler pour mettre à jour le graphique
+    
     if (typeof refreshDashboard === 'function') {
         refreshDashboard();
     }
 }
 
-// --- Recherche des livres ---
+
 searchInput.addEventListener('input', () => {
     const query = searchInput.value.toLowerCase();
     const filtered = livres.filter(livre => 
@@ -74,10 +112,10 @@ searchInput.addEventListener('input', () => {
     displayLivres(filtered);
 });
 
-// --- Tri des livres ---
+
 sortSelect.addEventListener('change', () => {
     const value = sortSelect.value;
-    let sorted = [...livres]; // copie du tableau
+    let sorted = [...livres]; 
 
     if (value === 'titre') {
         sorted.sort((a, b) => a.titre.localeCompare(b.titre));
@@ -88,7 +126,7 @@ sortSelect.addEventListener('change', () => {
     displayLivres(sorted);
 });
 
-// --- Gestionnaire du formulaire ---
+
 livreForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const titre = document.getElementById('titre').value;
@@ -96,11 +134,12 @@ livreForm.addEventListener('submit', (e) => {
     const annee = document.getElementById('annee').value;
     const genre = document.getElementById('genre').value;
 
+    
     addLivre(titre, auteur, annee, genre);
     livreForm.reset();
 });
 
-// --- Initialisation ---
+
 document.addEventListener('DOMContentLoaded', () => {
-    displayLivres(); // afficher la liste initiale (vide)
+    displayLivres();
 });
