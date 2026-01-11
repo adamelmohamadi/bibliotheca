@@ -1,8 +1,7 @@
-// --- Sélectionner les éléments du DOM ---
 const apiSearchInput = document.getElementById('apiSearch');
 const apiResultsContainer = document.getElementById('apiResults');
 
-// --- Fonction de recherche dans l'API OpenLibrary ---
+
 async function searchAPI() {
     const query = apiSearchInput.value.trim();
 
@@ -11,7 +10,7 @@ async function searchAPI() {
         return;
     }
 
-    // URL de l'API OpenLibrary
+    
     const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=5`;
 
     try {
@@ -26,36 +25,81 @@ async function searchAPI() {
         displayAPIResults(data.docs);
     } catch (error) {
         apiResultsContainer.innerHTML = '<p>Erreur lors de la recherche, veuillez réessayer plus tard.</p>';
+        console.error('Erreur API:', error);
     }
 }
 
-// --- Affichage des résultats de l'API ---
+
 function displayAPIResults(books) {
-    apiResultsContainer.innerHTML = ''; // Vider les résultats précédents
+    apiResultsContainer.innerHTML = '';
 
     books.forEach((book) => {
         const bookDiv = document.createElement('div');
         bookDiv.classList.add('book-item');
 
-        // Créer un titre et auteur
-        const title = book.title ? book.title : 'Titre inconnu';
+        
+        const title = book.title || 'Titre inconnu';
         const authors = book.author_name ? book.author_name.join(', ') : 'Auteur inconnu';
-        const year = book.first_publish_year ? book.first_publish_year : 'Année inconnue';
+        const year = book.first_publish_year || 'Année inconnue';
+        
+        
+        let coverImage = '';
+        if (book.cover_i) {
+            coverImage = `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`;
+        } else {
+            coverImage = 'https://via.placeholder.com/180x270?text=Pas+de+couverture';
+        }
 
-        bookDiv.innerHTML = `
-            <h3>${title}</h3>
-            <p><strong>Auteur(s):</strong> ${authors}</p>
-            <p><strong>Année:</strong> ${year}</p>
-            <button class="add-book-btn" onclick="addBookFromAPI('${title}', '${authors}', '${year}')">Ajouter au backoffice</button>
-        `;
 
+        const img = document.createElement('img');
+        img.src = coverImage;
+        img.alt = `Couverture de ${title}`;
+        img.className = 'book-cover';
+        bookDiv.appendChild(img);
+
+    
+        const h3 = document.createElement('h3');
+        h3.textContent = title;
+        bookDiv.appendChild(h3);
+
+        
+        const pAuthor = document.createElement('p');
+        pAuthor.innerHTML = `<strong>Auteur(s):</strong> ${authors}`;
+        bookDiv.appendChild(pAuthor);
+
+        
+        const pYear = document.createElement('p');
+        pYear.innerHTML = `<strong>Année:</strong> ${year}`;
+        bookDiv.appendChild(pYear);
+
+        
+        const addButton = document.createElement('button');
+        addButton.className = 'add-book-btn';
+        addButton.textContent = 'Ajouter au backoffice';
+        
+        
+        addButton.addEventListener('click', () => {
+            addBookFromAPI(title, authors, year, coverImage);
+        });
+        
+        bookDiv.appendChild(addButton);
         apiResultsContainer.appendChild(bookDiv);
     });
 }
 
-// --- Fonction pour ajouter un livre de l'API au backoffice ---
-function addBookFromAPI(title, authors, year) {
-    // Appel de la fonction dans livres.js pour ajouter le livre
-    const genre = 'Non spécifié'; // Tu peux choisir un genre par défaut ou ajouter une fonctionnalité pour le spécifier
-    addLivre(title, authors, year, genre); // Appelle la fonction addLivre du fichier livres.js
+
+function addBookFromAPI(title, authors, year, coverUrl) {
+    console.log(' Ajout du livre:', title);
+    console.log(' URL de la couverture:', coverUrl);
+    
+    const genre = 'Non spécifié';
+    
+    
+    addLivre(title, authors, year, genre, coverUrl);
+    
+    
+    alert(` Le livre "${title}" a été ajouté avec succès !`);
+    
+    
+    showSection('livres');
 }
