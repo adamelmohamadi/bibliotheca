@@ -1,6 +1,18 @@
 let auteurs = [];
 
 
+function loadAuteurs() {
+    const saved = localStorage.getItem('bibliotheca_auteurs');
+    if (saved) {
+        auteurs = JSON.parse(saved);
+    }
+}
+
+
+function saveAuteurs() {
+    localStorage.setItem('bibliotheca_auteurs', JSON.stringify(auteurs));
+}
+
 const auteurForm = document.getElementById('auteurForm');
 const auteursList = document.getElementById('auteursList');
 
@@ -36,12 +48,14 @@ function addAuteur(nom, nationalite) {
     }
 
     auteurs.push({ nom, nationalite });
+    saveAuteurs();
     displayAuteurs(); 
 }
 
 
 function removeAuteur(index) {
     auteurs.splice(index, 1); 
+    saveAuteurs();
     displayAuteurs(); 
 }
 
@@ -67,7 +81,10 @@ auteurForm.addEventListener('submit', (e) => {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    loadAuteurs();
     displayAuteurs(); 
 });
+
+
 
 
