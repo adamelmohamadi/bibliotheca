@@ -1,6 +1,18 @@
 let livres = []; 
 
 
+function loadLivres() {
+    const saved = localStorage.getItem('bibliotheca_livres');
+    if (saved) {
+        livres = JSON.parse(saved);
+    }
+}
+
+
+function saveLivres() {
+    localStorage.setItem('bibliotheca_livres', JSON.stringify(livres));
+}
+
 const livreForm = document.getElementById('livreForm');
 const searchInput = document.getElementById('searchLivre');
 const sortSelect = document.getElementById('sortLivre');
@@ -9,6 +21,58 @@ const sortSelect = document.getElementById('sortLivre');
 let livresContainer = document.createElement('ul');
 livresContainer.id = "livresList";
 document.getElementById('livres').appendChild(livresContainer);
+
+
+function createBookModal() {
+    const modal = document.createElement('div');
+    modal.id = 'bookModal';
+    modal.classList.add('book-modal');
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <img id="modalCover" class="modal-cover" src="" alt="Couverture">
+                <div class="modal-info">
+                    <h2 id="modalTitre"></h2>
+                    <p><strong>Auteur:</strong> <span id="modalAuteur"></span></p>
+                    <p><strong>Année:</strong> <span id="modalAnnee"></span></p>
+                    <p><strong>Genre:</strong> <span id="modalGenre"></span></p>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    
+    
+    const closeBtn = modal.querySelector('.close-modal');
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+}
+
+function showBookDetails(livre) {
+    const modal = document.getElementById('bookModal');
+    document.getElementById('modalTitre').textContent = livre.titre;
+    document.getElementById('modalAuteur').textContent = livre.auteur;
+    document.getElementById('modalAnnee').textContent = livre.annee;
+    document.getElementById('modalGenre').textContent = livre.genre;
+    
+    const imgElement = document.getElementById('modalCover');
+    if (livre.coverUrl) {
+        imgElement.src = livre.coverUrl;
+        imgElement.style.display = 'block';
+    } else {
+        imgElement.style.display = 'none';
+    }
+    
+    modal.style.display = 'block';
+}
 
 
 function displayLivres(filteredLivres = livres) {
@@ -46,6 +110,13 @@ function displayLivres(filteredLivres = livres) {
             <span>📚 ${livre.genre}</span>
         `;
         li.appendChild(infoDiv);
+        
+        // Ajouter l'événement click pour voir les détails
+        li.addEventListener('click', (e) => {
+            if (e.target !== deleteBtn) {
+                showBookDetails(livre);
+            }
+        });
 
     
         const deleteBtn = document.createElement('button');
@@ -82,11 +153,13 @@ function addLivre(titre, auteur, annee, genre, coverUrl = null) {
     
     console.log('Livre ajouté:', nouveauLivre);
     livres.push(nouveauLivre);
+    saveLivres();
     displayLivres();
 }
 
 function removeLivre(index) {
     livres.splice(index, 1);
+    saveLivres();
     displayLivres();
 }
 
@@ -141,5 +214,7 @@ livreForm.addEventListener('submit', (e) => {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    loadLivres();
+    createBookModal();
     displayLivres();
 });
